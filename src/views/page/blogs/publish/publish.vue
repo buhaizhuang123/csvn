@@ -42,10 +42,17 @@
             :http-request="uploadFiles"
             multiple
             :limit="3"
-            :file-list="fileList" >
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">上传文章所携带的视频｜图片文件</div>
+            :file-list="fileList">
+            <el-button size="small" type="primary" v-if="!blogContent">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip" v-if="!blogContent">上传文章所携带的视频｜图片文件</div>
           </el-upload>
+        </el-form-item>
+
+        <el-form-item>
+          <video id="vide" ref="video" width="640" height="360" src="http://localhost:1012/blogFile/preview"
+                 type="video/mp4" @click="supVideo" style="background-color: white">
+            <source type="video/mp4">
+          </video>
         </el-form-item>
 
         <el-form-item>
@@ -65,7 +72,9 @@
 
     </el-main>
   </el-container>
-
+  <!-- secret key UaNy0pAHsNWqs1OaGABQ4PGTLwocul3k-->
+  <!-- accesss key xhWh2ZXlbrsKIwMC2Ea7KQIA -->
+  <!-- appId  63616617 -->
 
 </template>
 
@@ -123,7 +132,8 @@ export default {
       },
       rickText: {
         title: '',
-        content: ''
+        content: '',
+        fileIds: ''
       },
       rules: {
         title: [
@@ -134,7 +144,7 @@ export default {
         ],
       },
       autoCommit: false, // 是否自动上传
-      fileList: []
+      fileList: [],
     }
   },
   mounted () {
@@ -193,7 +203,12 @@ export default {
               }
             })
               .then(res => {
-                console.log(res.config.url,'url')
+                // 将文件id 插入 富文本内容中
+                if (this.rickText.fileIds !== '') {
+                  this.rickText.fileIds = this.rickText.fileIds + ',' + res.data.data
+                } else {
+                  this.rickText.fileIds = res.data.data
+                }
                 this.$message.success('发布成功')
               })
               .catch(err => console.log(err))
@@ -204,7 +219,14 @@ export default {
         }
       )
 
-
+    },
+    supVideo () {
+      var vide = document.getElementById('vide')
+      if (vide.paused) {
+        vide.play()
+      } else if (vide.play()) {
+        vide.pause()
+      }
     }
   },
   watch: {

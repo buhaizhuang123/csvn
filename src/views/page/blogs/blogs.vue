@@ -5,7 +5,10 @@
     <el-header>
       <!--   v-for 必须指定一个key   -->
       <el-row class="content_title">
-        <el-col v-for="(item,index) in titles" :key="index" :span="2" :title="item.title">{{ item.name }}</el-col>
+        <el-col v-for="(item,index) in titles" :key="index" :span="2" :title="item.themeName">{{
+            item.themeName
+          }}
+        </el-col>
       </el-row>
     </el-header>
 
@@ -159,7 +162,7 @@
         </el-col>
 
       </el-row>
-      <el-dialog :visible.syncs="publishPageShow" title="博客信息页" @close="closeBlogsPage">
+      <el-dialog :visible.syncs="publishPageShow" title="博客信息页" @close="closeBlogsPage" :destroy-on-close="true">
         <publish :blogContent="contentInfo"></publish>
       </el-dialog>
     </el-main>
@@ -175,22 +178,7 @@ export default {
   name: 'blogs',
   data () {
     return {
-      titles: [
-        {name: '推荐', title: 'click'},
-        {name: '关注', title: 'click'},
-        {name: '后端', title: 'click'},
-        {name: '移动开发', title: 'click'},
-        {name: '编程语言', title: 'click'},
-        {name: 'Java', title: 'click'},
-        {name: 'Python', title: 'click'},
-        {name: '人工智能', title: 'click'},
-        {name: 'AIGC', title: 'click'},
-        {name: '大数据', title: 'click'},
-        {name: '数据库', title: 'click'},
-        {name: '数据结构与算法', title: 'click'},
-        {name: '音视频', title: 'click'},
-        {name: '云原生', title: 'click'},
-      ],
+      titles: [],
       // 创作者信息
       authors: [
         {blgName: '', titleImage: '', bloggerMark: ''},
@@ -202,7 +190,8 @@ export default {
       pageNum: 0,
       total: 0,
       publishPageShow: false,
-      contentInfo: {}
+      contentInfo: {},
+      themeId: '3' // 推荐
     }
   },
   components: {publish},
@@ -215,6 +204,8 @@ export default {
     this.findBlogsContentInfo()
     // 监听滚动事件
     window.addEventListener('scroll', this.findBlogsContentInfo, true)
+    // 题材列表
+    this.listAllTheme()
 
   },
   methods: {
@@ -236,7 +227,7 @@ export default {
     findBlogsContentInfo () {
       if (this.total < this.pageNum * 10) return
       this.pageNum++
-      this.$axios.post('/blogsService/blogs/listAllBlogs?pageNum=' + this.pageNum + '&pageSize=10')
+      this.$axios.post('/blogsService/blogs/listAllBlogs?pageNum=' + this.pageNum + '&pageSize=10&themeId=' + this.themeId)
         .then(res => {
           this.content_infos = this.content_infos.concat(res.data.data.list)
         }).catch(err => {
@@ -252,6 +243,15 @@ export default {
     },
     closeBlogsPage () {
       this.publishPageShow = false
+    },
+    // 题材列表查询
+    listAllTheme () {
+      this.$axios.post('/blogsService/theme/listAll')
+        .then(res => {
+          this.titles = res.data.data
+        }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }
