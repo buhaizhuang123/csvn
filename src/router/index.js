@@ -11,9 +11,10 @@ export default new Router({
   mode: 'history',
   routes: [
     {
+      // 自定义跳转为博客首页
       path: '/',
       name: 'HelloWorld',
-      component: HelloWorld
+      redirect: 'blogs'
     },
     page, publish
   ]

@@ -43,7 +43,9 @@
                           </el-col>
                         </el-col>
                         <el-col :span="6">作者 : {{ item.blgName }}</el-col>
-                        <el-col :span="6">...</el-col>
+                        <el-col :span="6">
+                          <a @click="openBlogs(item)">...</a>
+                        </el-col>
                       </el-col>
                       <el-col :span="12"></el-col>
                     </el-col>
@@ -157,7 +159,9 @@
         </el-col>
 
       </el-row>
-
+      <el-dialog :visible.syncs="publishPageShow" title="博客信息页" @close="closeBlogsPage">
+        <publish :blogContent="contentInfo"></publish>
+      </el-dialog>
     </el-main>
 
   </el-container>
@@ -165,6 +169,8 @@
 </template>
 
 <script>
+import publish from './publish/publish'
+
 export default {
   name: 'blogs',
   data () {
@@ -194,9 +200,12 @@ export default {
       ],
       content_infos: [],
       pageNum: 0,
-      total: 0
+      total: 0,
+      publishPageShow: false,
+      contentInfo: {}
     }
   },
+  components: {publish},
   mounted () {
     // 个人博主
     this.findBloggerInfo('2')
@@ -209,6 +218,7 @@ export default {
 
   },
   methods: {
+    // 查询博主信息
     findBloggerInfo (type) {
       var req = {type: type}
       this.$axios.post('/blogsService/blogs/listBloggerInfo?pageNum=1&pageSize=10', req)
@@ -222,6 +232,7 @@ export default {
         console.log(err)
       })
     },
+    // 查询博客信息
     findBlogsContentInfo () {
       if (this.total < this.pageNum * 10) return
       this.pageNum++
@@ -231,6 +242,16 @@ export default {
         }).catch(err => {
         console.log(err)
       })
+    },
+    // 打开详细页
+    openBlogs (data) {
+      console.log(data)
+      // 打开页面
+      this.publishPageShow = true
+      this.contentInfo = data
+    },
+    closeBlogsPage () {
+      this.publishPageShow = false
     }
   }
 }
@@ -281,7 +302,7 @@ export default {
 }
 
 .content_bottom {
-  padding-top : 20px;
+  padding-top: 20px;
 }
 
 

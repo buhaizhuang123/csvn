@@ -7,25 +7,51 @@
     <el-main>
       <el-form ref="form" :model="rickText" label-width="80px" :rules="rules">
         <el-form-item>
-          <el-button class="redirect_page" @click="redirectPage">跳转首页</el-button>
+          <el-button class="redirect_page" @click="redirectPage" v-if="!blogContent">跳转首页</el-button>
         </el-form-item>
         <el-form-item label="标题" prop="title">
-          <el-input label="标题" v-model="rickText.title" placeholder="标题"></el-input>
+          <el-input label="标题" v-model="rickText.title" placeholder="标题" :readonly="!(blogContent == null)"></el-input>
         </el-form-item>
         <el-form-item label="文章内容" prop="content">
           <div class="risk_text">
             <editor
               v-model="rickText.content"
               :init="init"
-              :disabled="disabled">
+              :disabled="blogContent != null">
               @onClick="onClick"
             </editor>
           </div>
         </el-form-item>
 
+        <!--    一些按钮点赞、收藏、踩    -->
+        <el-col>
+          <el-col :span="6">
+            <el-image src="static/点赞.png" style="width:20px;height:20px"
+                      @click="clickButton(rickText['blogId'],1)"></el-image>
+          </el-col>
+          <el-col :span="6">
+            <el-image src="static/点踩.png" style="width:20px;height:18px"
+                      @click="clickButton(rickText['blogId'],2)"></el-image>
+          </el-col>
+          <!--收藏-->
+        </el-col>
+        <!--    文件上传    -->
         <el-form-item>
-          <el-button type="primary" @click="saveContent(rickText)">保存</el-button>
+          <el-upload
+            action="on"
+            :http-request="uploadFiles"
+            multiple
+            :limit="3"
+            :file-list="fileList" >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">上传文章所携带的视频｜图片文件</div>
+          </el-upload>
         </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="saveContent(rickText)" v-if="!blogContent">保存</el-button>
+        </el-form-item>
+
 
       </el-form>
       <el-row>
@@ -67,6 +93,11 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    // todo 标记文章是否可编辑根据是否为本文作者
+    blogContent: {
+      type: Object,
+      default: null
     }
   },
   data () {
@@ -101,7 +132,9 @@ export default {
         content: [
           {required: true, message: '请输入内容', trigger: 'blur'}
         ],
-      }
+      },
+      autoCommit: false, // 是否自动上传
+      fileList: []
     }
   },
   mounted () {
@@ -133,6 +166,57 @@ export default {
         }
       )
 
+    },
+    clickButton (blogId, like) {
+      // 1 点赞
+      // 2 点踩
+      // 3 收藏
+
+      // todo 后端判断什么事件 调用后端
+      console.log('请求后端')
+    },
+    uploadFiles (data) {
+      console.log(data, 'data')
+      let formData = new FormData()
+      formData.append('file', data.file)
+      console.log(formData)
+
+      this.$refs['form'].validate(
+        (valid) => {
+          if (valid) {
+            // 调用文件上传方法
+            this.$axios.post('/blogsService/blogFile/upload', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                'Access-Control-Allow-Origin': true,
+                'enctype': 'multipart/form-data'
+              }
+            })
+              .then(res => {
+                console.log(res.config.url,'url')
+                this.$message.success('发布成功')
+              })
+              .catch(err => console.log(err))
+
+          } else {
+            this.$message.error('必输项校验未通过！！！')
+          }
+        }
+      )
+
+
+    }
+  },
+  watch: {
+    blogContent: {
+      handler (nwVal, old) {
+        if (nwVal) {
+          this.rickText = nwVal
+          this.rickText['content'] = nwVal['blogsContent']
+        }
+      },
+      deep: true,
+      immediate: true
     }
   }
 }
