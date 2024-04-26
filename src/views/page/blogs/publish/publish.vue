@@ -48,12 +48,15 @@
           </el-upload>
         </el-form-item>
 
-        <el-form-item>
-          <video id="vide" ref="video" width="640" height="360" src="http://localhost:1012/blogFile/preview"
-                 type="video/mp4" @click="supVideo" style="background-color: white">
-            <source type="video/mp4">
-          </video>
+        <el-form-item
+          v-for="(item,index) in blogContent &&  blogContent.fileIds ?  blogContent.fileIds.split(',') : '' "
+          :key="index">
+          <a href="#" @click="preview(videoSrc+'?fileId='+item)">视频 {{ index }}</a>
         </el-form-item>
+        <el-dialog title="视频播放页" :visible.sync="videoShow" @close="()=> {this.videoShow = false}"
+                   :destroy-on-close="true" append-to-body="true">
+          <Video :videoTitleImg="videoTitleImg" :videoSrc="videoTempSrc"></Video>
+        </el-dialog>
 
         <el-form-item>
           <el-button type="primary" @click="saveContent(rickText)" v-if="!blogContent">保存</el-button>
@@ -93,10 +96,12 @@ import 'tinymce/plugins/wordcount'
 import 'tinymce/plugins/colorpicker'
 import 'tinymce/plugins/textcolor'
 import 'tinymce/icons/default' // 图标 -解决测试环境找不icon问题
+import Video from '../../video/Video'
+
 export default {
   name: 'publish',
   components: {
-    Editor,
+    Editor, Video,
   },
   props: {
     disabled: {
@@ -145,11 +150,20 @@ export default {
       },
       autoCommit: false, // 是否自动上传
       fileList: [],
+      videoTitleImg: '',
+      videoSrc: 'http://localhost:1012/blogFile/preview',
+      videoTempSrc: '',
+      videoShow: false
     }
   },
   mounted () {
-    var params = this.$route.params
-    console.log(params)
+    // 外部进来 加载文件信息
+    if (this.blogContent) {
+      console.log(this.blogContent, 'this.blogContent')
+      if (this.blogContent.fileIds) {
+
+      }
+    }
   },
   methods: {
     onClick (e) {
@@ -220,14 +234,12 @@ export default {
       )
 
     },
-    supVideo () {
-      var vide = document.getElementById('vide')
-      if (vide.paused) {
-        vide.play()
-      } else if (vide.play()) {
-        vide.pause()
-      }
+
+    preview (vSrc) {
+      this.videoTempSrc = vSrc
+      this.videoShow = true
     }
+
   },
   watch: {
     blogContent: {

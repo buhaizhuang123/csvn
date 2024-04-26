@@ -6,6 +6,7 @@ import router from './router'
 // eslint-disable-next-line no-unused-vars
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css' // ui css 样式导入
+import "video.js/dist/video-js.css";
 // eslint-disable-next-line no-unused-vars
 import axios from 'axios'
 // 配置axios

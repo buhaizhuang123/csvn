@@ -46,13 +46,12 @@
               <el-col :span="4">
                 <el-button class="login_button" @click="()=> {this.loginPageShow=true}">登录</el-button>
               </el-col>
-              <el-col :span="4">
-                <p>会员中心</p>
-              </el-col>
-              <el-col :span="4">
+<!--              <el-col :span="4">-->
+              <!--                <p>会员中心</p>-->
+              <!--              </el-col>-->
+              <el-col :span="8">
                 <!--                style="width: auto" :default-active="$route.path" :router="true" mode="horizontal"-->
                 <el-menu default-active="1">
-
                   <el-submenu index="1">
                     <template slot="title">
                       <i class="el-icon-message"></i>
@@ -69,12 +68,23 @@
                   </el-submenu>
                 </el-menu>
               </el-col>
-              <el-col :span="4">
-                <p>历史</p>
+              <el-col :span="8">
+                <el-menu default-active="1" :collapse-transition="false">
+                  <el-submenu index="1">
+                    <template slot="title">
+                      <i class="el-icon-edit"></i>
+                      <span>配置</span>
+                    </template>
+                    <el-menu-item-group>
+                      <el-menu-item index="1-1">题材配置</el-menu-item>
+                      <el-menu-item index="1-2">用户配置</el-menu-item>
+                    </el-menu-item-group>
+                  </el-submenu>
+                </el-menu>
               </el-col>
-              <el-col :span="4">
-                <p>创作中心</p>
-              </el-col>
+<!--              <el-col :span="4">-->
+<!--                <p>创作中心</p>-->
+<!--              </el-col>-->
               <el-col :span="4">
                 <el-button class="publish_btn" type="primary" @click="openRiskText">发布</el-button>
               </el-col>
@@ -144,12 +154,6 @@ export default {
   padding-top: 7px;
 }
 
-.el-submenu .el-menu-item {
-  height: 50px;
-  line-height: 50px;
-  padding: 0 45px;
-  /* min-width: 200px; */
-}
 
 .login_button {
   border-color: white;
@@ -166,5 +170,6 @@ export default {
   background-color: white;
   color: #2c3e50;
 }
+
 
 </style>

@@ -5,9 +5,14 @@
     <el-header>
       <!--   v-for 必须指定一个key   -->
       <el-row class="content_title">
-        <el-col v-for="(item,index) in titles" :key="index" :span="2" :title="item.themeName">{{
-            item.themeName
-          }}
+        <el-col v-for="(item,index) in titles" :key="index" :span="2" :title="item.themeName"
+        >
+          <el-button @click="switchTheme(item)">
+            {{
+              item.themeName
+            }}
+          </el-button>
+
         </el-col>
       </el-row>
     </el-header>
@@ -225,11 +230,12 @@ export default {
     },
     // 查询博客信息
     findBlogsContentInfo () {
-      if (this.total < this.pageNum * 10) return
+      if (this.total < (this.pageNum * 10)) return
       this.pageNum++
       this.$axios.post('/blogsService/blogs/listAllBlogs?pageNum=' + this.pageNum + '&pageSize=10&themeId=' + this.themeId)
         .then(res => {
           this.content_infos = this.content_infos.concat(res.data.data.list)
+          this.total = res.data.data.total
         }).catch(err => {
         console.log(err)
       })
@@ -252,6 +258,18 @@ export default {
         }).catch(err => {
         console.log(err)
       })
+    },
+    // 切换题材
+    switchTheme (theme) {
+      this.themeId = theme.themeId
+      this.init()
+      this.findBlogsContentInfo()
+    },
+    // 初始化
+    init () {
+      this.content_infos = []
+      this.pageNum = 0
+      this.total = 0
     }
   }
 }
