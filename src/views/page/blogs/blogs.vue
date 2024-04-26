@@ -1,178 +1,180 @@
 <template>
-  <!--  博客信息页  -->
-  <el-container>
-    <!--  头 关注、后端...  -->
-    <el-header>
-      <!--   v-for 必须指定一个key   -->
-      <el-row class="content_title">
-        <el-col v-for="(item,index) in titles" :key="index" :span="2" :title="item.themeName"
-        >
-          <el-button @click="switchTheme(item)">
-            {{
-              item.themeName
-            }}
-          </el-button>
+  <div>
+    <!--  博客信息页  -->
+    <el-container>
+      <!--  头 关注、后端...  -->
+      <el-header>
+        <!--   v-for 必须指定一个key   -->
+        <el-row class="content_title">
+          <el-col v-for="(item,index) in titles" :key="index" :span="2" :title="item.themeName"
+          >
+            <el-button @click="switchTheme(item)">
+              {{
+                item.themeName
+              }}
+            </el-button>
 
-        </el-col>
-      </el-row>
-    </el-header>
-
-
-    <!--  blogsContent 内容  -->
-    <el-main>
-      <el-row>
-        <div class="content">
-          <el-col :span="16">
-            <div style="margin-top:1rem;height:100%" class="line-time">
-              <el-timeline ref="opertimeline" style="height:96%;overflow: auto;">
-                <el-timeline-item placement="top" v-for="(item,index) in content_infos" :key="index">
-                  <el-col :span="6">
-                    <p>{{ item.content_image }}</p>
-                  </el-col>
-                  <el-col :span="18" class="blogs_content">
-                    <el-col>{{ item.title }}</el-col>
-                    <el-col>
-                      <el-card class="content_0" v-html="item.blogsContent"></el-card>
-                    </el-col>
-                    <el-col class="content_bottom">
-                      <el-col :span="12">
-                        <el-col :span="6">
-                          <el-col :span="12">
-                            <el-image src="static/点赞.png" style="width:20px;height:20px"></el-image>
-                          </el-col>
-                          <el-col :span="12">{{ item.like }}</el-col>
-                        </el-col>
-                        <el-col :span="6">
-                          <el-col :span="12">
-                            <el-image src="static/点踩.png" style="width:20px;height:18px"></el-image>
-                          </el-col>
-                          <el-col :span="12">
-                            {{ item.unLike }}
-                          </el-col>
-                        </el-col>
-                        <el-col :span="6">作者 : {{ item.blgName }}</el-col>
-                        <el-col :span="6">
-                          <a @click="openBlogs(item)">...</a>
-                        </el-col>
-                      </el-col>
-                      <el-col :span="12"></el-col>
-                    </el-col>
-                  </el-col>
-                </el-timeline-item>
-              </el-timeline>
-            </div>
           </el-col>
-        </div>
-        <el-col :span="8">
-          <!--    广告窗      -->
-          <div class="advertising_head">
-            <p>广告窗</p>
-          </div>
+        </el-row>
+      </el-header>
 
-          <!--    作者推荐      -->
-          <div>
-            <p class="recommend">作者推荐</p>
+
+      <!--  blogsContent 内容  -->
+      <el-main>
+        <el-row>
+          <div class="content">
+            <el-col :span="16">
+              <div style="margin-top:1rem;height:100%" class="line-time">
+                <el-timeline ref="opertimeline" style="height:96%;overflow: auto;">
+                  <el-timeline-item placement="top" v-for="(item,index) in content_infos" :key="index">
+                    <el-col :span="6">
+                      <p>{{ item.content_image }}</p>
+                    </el-col>
+                    <el-col :span="18" class="blogs_content">
+                      <el-col>{{ item.title }}</el-col>
+                      <el-col>
+                        <el-card class="content_0" v-html="item.blogsContent"></el-card>
+                      </el-col>
+                      <el-col class="content_bottom">
+                        <el-col :span="12">
+                          <el-col :span="6">
+                            <el-col :span="12">
+                              <el-image src="static/点赞.png" style="width:20px;height:20px"></el-image>
+                            </el-col>
+                            <el-col :span="12">{{ item.like }}</el-col>
+                          </el-col>
+                          <el-col :span="6">
+                            <el-col :span="12">
+                              <el-image src="static/点踩.png" style="width:20px;height:18px"></el-image>
+                            </el-col>
+                            <el-col :span="12">
+                              {{ item.unLike }}
+                            </el-col>
+                          </el-col>
+                          <el-col :span="6">作者 : {{ item.blgName }}</el-col>
+                          <el-col :span="6">
+                            <a @click="openBlogs(item)">...</a>
+                          </el-col>
+                        </el-col>
+                        <el-col :span="12"></el-col>
+                      </el-col>
+                    </el-col>
+                  </el-timeline-item>
+                </el-timeline>
+              </div>
+            </el-col>
+          </div>
+          <el-col :span="8">
+            <!--    广告窗      -->
+            <div class="advertising_head">
+              <p>广告窗</p>
+            </div>
+
+            <!--    作者推荐      -->
             <div>
-              <el-row class="blogs-author-tj" v-for="(item,index) in authors" :key="index">
-                <el-col :span="4">{{ item.titleImage }}</el-col>
-                <el-col :span="16">
-                  <el-col>{{ item.blgName }}</el-col>
-                  <el-col>{{ item.bloggerMark }}</el-col>
+              <p class="recommend">作者推荐</p>
+              <div>
+                <el-row class="blogs-author-tj" v-for="(item,index) in authors" :key="index">
+                  <el-col :span="4">{{ item.titleImage }}</el-col>
+                  <el-col :span="16">
+                    <el-col>{{ item.blgName }}</el-col>
+                    <el-col>{{ item.bloggerMark }}</el-col>
+                  </el-col>
+                  <!--        关注 有触发效果        -->
+                  <el-col :span="4">关注</el-col>
+                </el-row>
+              </div>
+
+            </div>
+
+            <!--    官方博客      -->
+            <div>
+              <el-row>
+                <el-col :span="12">官方博客</el-col>
+                <el-col :span="12">官方账号入住</el-col>
+              </el-row>
+              <div>
+                <el-row class="blogs-author-tj" v-for="(item,index) in official_authors" :key="index">
+                  <el-col :span="4">{{ item.titleImage }}</el-col>
+                  <el-col :span="16">
+                    <el-col>{{ item.blgName }}</el-col>
+                    <el-col>{{ item.bloggerMark }}</el-col>
+                  </el-col>
+                  <!--        关注 有触发效果        -->
+                  <el-col :span="4">关注</el-col>
+                </el-row>
+              </div>
+
+            </div>
+
+            <!--    推荐页 你是否愿意向朋友推荐博客首页      -->
+            <div>
+              <p>你是否愿意向朋友推荐博客首页</p>
+              <el-row>
+                <el-col :span="4">
+                  <el-col>图片</el-col>
+                  <el-col>很不推荐</el-col>
                 </el-col>
-                <!--        关注 有触发效果        -->
-                <el-col :span="4">关注</el-col>
+                <el-col :span="4">
+                  <el-col>图片</el-col>
+                  <el-col>不推荐</el-col>
+                </el-col>
+                <el-col :span="4">
+                  <el-col>图片</el-col>
+                  <el-col>一般</el-col>
+                </el-col>
+                <el-col :span="4">
+                  <el-col>图片</el-col>
+                  <el-col>推荐</el-col>
+                </el-col>
+                <el-col :span="4">
+                  <el-col>图片</el-col>
+                  <el-col>强烈推荐</el-col>
+                </el-col>
               </el-row>
             </div>
 
-          </div>
-
-          <!--    官方博客      -->
-          <div>
-            <el-row>
-              <el-col :span="12">官方博客</el-col>
-              <el-col :span="12">官方账号入住</el-col>
-            </el-row>
-            <div>
-              <el-row class="blogs-author-tj" v-for="(item,index) in official_authors" :key="index">
-                <el-col :span="4">{{ item.titleImage }}</el-col>
-                <el-col :span="16">
-                  <el-col>{{ item.blgName }}</el-col>
-                  <el-col>{{ item.bloggerMark }}</el-col>
-                </el-col>
-                <!--        关注 有触发效果        -->
-                <el-col :span="4">关注</el-col>
+            <!--    联系我们      -->
+            <div class="call_me">
+              <!--  head       -->
+              <el-row>
+                <el-col>联系我们</el-col>
+                <el-col :span="18">00000-0000-000</el-col>
+                <el-col :span="6">在线客服</el-col>
               </el-row>
+              <!--      关于我们、招贤纳士、商务合作、寻求报道      -->
+              <el-row>
+                <el-col :span="6">关于我们</el-col>
+                <el-col :span="6">| 招贤纳士</el-col>
+                <el-col :span="6">| 商务合作</el-col>
+                <el-col :span="6">| 寻求报道</el-col>
+              </el-row>
+              <!--    备案信息      -->
+              <el-row>
+                <el-col :span="12">京备案信息 xxxx 号</el-col>
+                <el-col :span="12">经营性网站备案信息</el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <el-col :span="3">图片</el-col>
+                  <el-col :span="21">公安备案号</el-col>
+                </el-col>
+                <el-col :span="12">经营性网站备案信息</el-col>
+                ...
+              </el-row>
+
             </div>
 
-          </div>
+          </el-col>
 
-          <!--    推荐页 你是否愿意向朋友推荐博客首页      -->
-          <div>
-            <p>你是否愿意向朋友推荐博客首页</p>
-            <el-row>
-              <el-col :span="4">
-                <el-col>图片</el-col>
-                <el-col>很不推荐</el-col>
-              </el-col>
-              <el-col :span="4">
-                <el-col>图片</el-col>
-                <el-col>不推荐</el-col>
-              </el-col>
-              <el-col :span="4">
-                <el-col>图片</el-col>
-                <el-col>一般</el-col>
-              </el-col>
-              <el-col :span="4">
-                <el-col>图片</el-col>
-                <el-col>推荐</el-col>
-              </el-col>
-              <el-col :span="4">
-                <el-col>图片</el-col>
-                <el-col>强烈推荐</el-col>
-              </el-col>
-            </el-row>
-          </div>
+        </el-row>
+        <el-dialog :visible.syncs="publishPageShow" title="博客信息页" @close="closeBlogsPage" :destroy-on-close="true">
+          <publish :blogContent="contentInfo"></publish>
+        </el-dialog>
+      </el-main>
 
-          <!--    联系我们      -->
-          <div class="call_me">
-            <!--  head       -->
-            <el-row>
-              <el-col>联系我们</el-col>
-              <el-col :span="18">00000-0000-000</el-col>
-              <el-col :span="6">在线客服</el-col>
-            </el-row>
-            <!--      关于我们、招贤纳士、商务合作、寻求报道      -->
-            <el-row>
-              <el-col :span="6">关于我们</el-col>
-              <el-col :span="6">| 招贤纳士</el-col>
-              <el-col :span="6">| 商务合作</el-col>
-              <el-col :span="6">| 寻求报道</el-col>
-            </el-row>
-            <!--    备案信息      -->
-            <el-row>
-              <el-col :span="12">京备案信息 xxxx 号</el-col>
-              <el-col :span="12">经营性网站备案信息</el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="12">
-                <el-col :span="3">图片</el-col>
-                <el-col :span="21">公安备案号</el-col>
-              </el-col>
-              <el-col :span="12">经营性网站备案信息</el-col>
-              ...
-            </el-row>
-
-          </div>
-
-        </el-col>
-
-      </el-row>
-      <el-dialog :visible.syncs="publishPageShow" title="博客信息页" @close="closeBlogsPage" :destroy-on-close="true">
-        <publish :blogContent="contentInfo"></publish>
-      </el-dialog>
-    </el-main>
-
-  </el-container>
+    </el-container>
+  </div>
 
 </template>
 
@@ -194,6 +196,7 @@ export default {
       content_infos: [],
       pageNum: 0,
       total: 0,
+      pageSize: 4,
       publishPageShow: false,
       contentInfo: {},
       themeId: '3' // 推荐
@@ -205,10 +208,10 @@ export default {
     this.findBloggerInfo('2')
     // 企业博主
     this.findBloggerInfo('1')
-    // 查询文章信息
+    // // 查询文章信息
     this.findBlogsContentInfo()
     // 监听滚动事件
-    window.addEventListener('scroll', this.findBlogsContentInfo, true)
+    window.addEventListener('scroll', this.onScroll, true)
     // 题材列表
     this.listAllTheme()
 
@@ -230,15 +233,26 @@ export default {
     },
     // 查询博客信息
     findBlogsContentInfo () {
-      if (this.total < (this.pageNum * 10)) return
+
+      if (this.total < (this.pageNum * this.pageSize)) return
       this.pageNum++
-      this.$axios.post('/blogsService/blogs/listAllBlogs?pageNum=' + this.pageNum + '&pageSize=10&themeId=' + this.themeId)
+      this.$axios.post('/blogsService/blogs/listAllBlogs?pageNum=' + this.pageNum + '&pageSize=' + this.pageSize + '&themeId=' + this.themeId)
         .then(res => {
           this.content_infos = this.content_infos.concat(res.data.data.list)
           this.total = res.data.data.total
         }).catch(err => {
         console.log(err)
       })
+
+    },
+    onScroll () {
+
+      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      let clientHeight = document.documentElement.clientHeight
+      let scrollHeight = document.documentElement.scrollHeight
+      if (scrollTop + clientHeight >= scrollHeight) {
+        this.findBlogsContentInfo()
+      }
     },
     // 打开详细页
     openBlogs (data) {
@@ -270,7 +284,7 @@ export default {
       this.content_infos = []
       this.pageNum = 0
       this.total = 0
-    }
+    },
   }
 }
 </script>

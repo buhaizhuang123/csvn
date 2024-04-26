@@ -24,17 +24,26 @@
         </el-form-item>
 
         <!--    一些按钮点赞、收藏、踩    -->
-        <el-col>
-          <el-col :span="6">
-            <el-image src="static/点赞.png" style="width:20px;height:20px"
-                      @click="clickButton(rickText['blogId'],1)"></el-image>
+        <el-form-item>
+          <el-col>
+            <el-col :span="1">
+              <el-image src="static/点赞.png" style="width:20px;height:20px"
+                        @click="clickButton(rickText['blogId'],1)"></el-image>
+            </el-col>
+            <el-col :span="1">
+              <el-image src="static/点踩.png" style="width:20px;height:18px"
+                        @click="clickButton(rickText['blogId'],2)"></el-image>
+            </el-col>
+            <el-col :span="3">
+              <el-select placeholder="文章标签选择" v-model="rickText['themeId']">
+                <el-option v-for="(item,index) in themeList" :key="index" :label="item.themeName"
+                           :value="item.themeId"></el-option>
+              </el-select>
+
+            </el-col>
+            <!--收藏-->
           </el-col>
-          <el-col :span="6">
-            <el-image src="static/点踩.png" style="width:20px;height:18px"
-                      @click="clickButton(rickText['blogId'],2)"></el-image>
-          </el-col>
-          <!--收藏-->
-        </el-col>
+        </el-form-item>
         <!--    文件上传    -->
         <el-form-item>
           <el-upload
@@ -54,7 +63,7 @@
           <a href="#" @click="preview(videoSrc+'?fileId='+item)">视频 {{ index }}</a>
         </el-form-item>
         <el-dialog title="视频播放页" :visible.sync="videoShow" @close="()=> {this.videoShow = false}"
-                   :destroy-on-close="true" append-to-body="true">
+                   :destroy-on-close="true" :append-to-body="true">
           <Video :videoTitleImg="videoTitleImg" :videoSrc="videoTempSrc"></Video>
         </el-dialog>
 
@@ -153,7 +162,8 @@ export default {
       videoTitleImg: '',
       videoSrc: 'http://localhost:1012/blogFile/preview',
       videoTempSrc: '',
-      videoShow: false
+      videoShow: false,
+      themeList: []
     }
   },
   mounted () {
@@ -164,6 +174,8 @@ export default {
 
       }
     }
+
+    this.listAllTheme()
   },
   methods: {
     onClick (e) {
@@ -224,6 +236,7 @@ export default {
                   this.rickText.fileIds = res.data.data
                 }
                 this.$message.success('发布成功')
+                this.$router.push('/blogs')
               })
               .catch(err => console.log(err))
 
@@ -234,12 +247,20 @@ export default {
       )
 
     },
-
+    // 预览
     preview (vSrc) {
       this.videoTempSrc = vSrc
       this.videoShow = true
-    }
-
+    },
+    // 题材列表查询
+    listAllTheme () {
+      this.$axios.post('/blogsService/theme/listAll')
+        .then(res => {
+          this.themeList = res.data.data
+        }).catch(err => {
+        console.log(err)
+      })
+    },
   },
   watch: {
     blogContent: {

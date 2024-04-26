@@ -44,27 +44,27 @@ export default {
     }
   },
   methods: {
-    onProgressMouseDown (event) {
-      this.dragging = true
-      this.startX = event.clientX
-      this.startTime = this.player.currentTime()
-      document.addEventListener('mousemove', this.onProgressMouseMove)
-      document.addEventListener('mouseup', this.onProgressMouseUp)
-    },
-    onProgressMouseMove (event) {
-      if (this.dragging) {
-        console.log('xxxxx', event, 'progressBar', this.$refs.progressBar.parentNode)
-        const deltaX = event.clientX - this.startX
-        const ratio = deltaX / this.$refs.progressBar.parentNode.offsetWidth
-        const newTime = this.startTime + ratio * this.player.duration()
-        this.player.currentTime(newTime)
-      }
-    },
-    onProgressMouseUp () {
-      this.dragging = false
-      document.removeEventListener('mousemove', this.onProgressMouseMove)
-      document.removeEventListener('mouseup', this.onProgressMouseUp)
-    }
+    // onProgressMouseDown (event) {
+    //   this.dragging = true
+    //   this.startX = event.clientX
+    //   this.startTime = this.player.currentTime()
+    //   document.addEventListener('mousemove', this.onProgressMouseMove)
+    //   document.addEventListener('mouseup', this.onProgressMouseUp)
+    // },
+    // onProgressMouseMove (event) {
+    //   if (this.dragging) {
+    //     console.log('xxxxx', event, 'progressBar', this.$refs.progressBar.parentNode)
+    //     const deltaX = event.clientX - this.startX
+    //     const ratio = deltaX / this.$refs.progressBar.parentNode.offsetWidth
+    //     const newTime = this.startTime + ratio * this.player.duration()
+    //     this.player.currentTime(newTime)
+    //   }
+    // },
+    // onProgressMouseUp () {
+    //   this.dragging = false
+    //   document.removeEventListener('mousemove', this.onProgressMouseMove)
+    //   document.removeEventListener('mouseup', this.onProgressMouseUp)
+    // }
   },
   mounted () {
 
